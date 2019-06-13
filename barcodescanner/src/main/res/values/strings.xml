@@ -17,6 +17,14 @@
 <resources>
   <string name="app_name">dummy</string>
   <string name="app_picker_name">Applications</string>
+  <string name="description_ecobox_icon">Ecobox icon</string>
+  <string name="description_barcode_icon">Barcode icon</string>
+  <string name="footer_status" translatable="false">Status</string>
+  <string name="footer_ecoins" translatable="false">Ecoins</string>
+  <string name="footer_status_example" translatable="false">#21</string>
+  <string name="footer_ecocoins_example" translatable="false">$299.98</string>
+  <string name="footer_msg_ecobox" translatable="false">Escanea el código del QR del Ecobox más cercano</string>
+  <string name="footer_msg_registra" translatable="false">Escanea el código de tus envases y guárdalos en tu perfil</string>
   <string name="bookmark_picker_name">Bookmarks</string>
   <string name="button_add_calendar">Add to calendar</string>
   <string name="button_add_contact">Add contact</string>
@@ -37,7 +45,7 @@
   <string name="button_share_by_sms">Share via SMS</string>
   <string name="button_share_clipboard">Clipboard</string>
   <string name="button_share_contact">Contact</string>
-  <string name="button_show_map">Show map</string>
+  <string name="button_show_map">Ubícanos</string>
   <string name="button_sms">Send SMS</string>
   <string name="button_web_search">Web search</string>
   <string name="button_wifi">Connect to Network</string>
