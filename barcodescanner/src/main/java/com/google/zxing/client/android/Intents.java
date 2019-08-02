@@ -38,6 +38,7 @@ public final class Intents {
 
         public static final String ECOBOX_VIEW = "ecobox_view";
         public static final String ECOBOX_STATUS = "status";
+        public static final String ECOBOX_UNIQUE_ID = "unique_id";
         public static final String ECOBOX_ECOINS = "ecoins";
         public static final String ECOBOX_BARCODES = "barcodes";
         public static final String ECOBOX_RECYCLA = "ECOBOX_RECYCLA";

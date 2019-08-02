@@ -31,6 +31,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.hardware.Camera;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,6 +50,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,6 +58,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
@@ -92,6 +95,7 @@ import static com.google.zxing.client.android.Intents.Scan.ECOBOX_ECOINS;
 import static com.google.zxing.client.android.Intents.Scan.ECOBOX_RECYCLA;
 import static com.google.zxing.client.android.Intents.Scan.ECOBOX_REGISTRA;
 import static com.google.zxing.client.android.Intents.Scan.ECOBOX_STATUS;
+import static com.google.zxing.client.android.Intents.Scan.ECOBOX_UNIQUE_ID;
 import static com.google.zxing.client.android.Intents.Scan.ECOBOX_VIEW;
 
 /**
@@ -144,12 +148,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     /**
      * ECOBOX DEFINITIONS
      */
-    private RelativeLayout footerEcoboxLayout, footerBottomLayout;
+    private RelativeLayout footerEcoboxLayout, footerBottomLayout, plasticBagLayout;
     private LinearLayout footerNoBarcodes;
     private ImageButton footerIcon;
     private Button showMap;
-    private TextView ecoins, status;
+    private TextView ecoins, status, uniqueId;
     private ListView footerBarcodesList;
+    private ToggleButton plasticBag;
 
     private static boolean isZXingURL(String dataString) {
         if (dataString == null) {
@@ -215,6 +220,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         footerEcoboxLayout = findViewById(R.id.footer_ecobox_layout);
         footerBottomLayout = findViewById(R.id.footer_bottom_layout);
         footerIcon = findViewById(R.id.footer_icon);
+
+        plasticBag = findViewById(R.id.plastic_bag_switch);
+        plasticBagLayout = findViewById(R.id.plastic_bag_layout);
+        uniqueId = findViewById(R.id.unique_id);
+
         footerIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -231,6 +241,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 intent.putExtra(Intents.Scan.RESULT, "go_to_map");
                 intent.putExtra(Intents.Scan.RESULT_FORMAT, "ecobox_internal");
                 sendReplyMessage(R.id.return_scan_result, intent, DEFAULT_INTENT_RESULT_DURATION_MS);
+            }
+        });
+
+        plasticBag.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                plasticBagLayout.setVisibility(b ? View.VISIBLE : View.GONE);
             }
         });
     }
@@ -257,12 +274,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         // off screen.
         cameraManager = new CameraManager(getApplication());
 
-        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
+        viewfinderView = findViewById(R.id.viewfinder_view);
         viewfinderView.setCameraManager(cameraManager);
 
         resultView = findViewById(R.id.result_view);
-        flipButton = (Button) findViewById(R.id.flip_button);
-        torchButton = (Button) findViewById(R.id.torch_button);
+        flipButton = findViewById(R.id.flip_button);
+        torchButton = findViewById(R.id.torch_button);
 
         handler = null;
         lastResult = null;
@@ -384,11 +401,14 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             customPromptMessage = config.getString(ECOBOX_VIEW);
             Object ecoins = config.get(ECOBOX_ECOINS);
             Object status = config.get(ECOBOX_STATUS);
+            Object uniqueId = config.get(ECOBOX_UNIQUE_ID);
 
             if (ecoins != null)
                 this.ecoins.setText(ecoins.toString());
             if (status != null)
                 this.status.setText(status.toString());
+            if (uniqueId != null)
+                this.uniqueId.setText(uniqueId.toString());
 
             if (customPromptMessage != null) {
                 switch (customPromptMessage) {
@@ -686,14 +706,14 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             barcodeImageView.setImageBitmap(barcode);
         }
 
-        TextView formatTextView = (TextView) findViewById(R.id.format_text_view);
+        TextView formatTextView = findViewById(R.id.format_text_view);
         formatTextView.setText(rawResult.getBarcodeFormat().toString());
 
-        TextView typeTextView = (TextView) findViewById(R.id.type_text_view);
+        TextView typeTextView = findViewById(R.id.type_text_view);
         typeTextView.setText(resultHandler.getType().toString());
 
         DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        TextView timeTextView = (TextView) findViewById(R.id.time_text_view);
+        TextView timeTextView = findViewById(R.id.time_text_view);
         timeTextView.setText(formatter.format(new Date(rawResult.getTimestamp())));
 
 
@@ -821,6 +841,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             }
             sendReplyMessage(R.id.return_scan_result, intent, resultDurationMS);
 
+            playBarcodeSound();
+
         } else if (source == IntentSource.PRODUCT_SEARCH_LINK) {
 
             // Reformulate the URL which triggered us into a query, so that the request goes to the same
@@ -838,6 +860,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             }
 
         }
+    }
+
+    private void playBarcodeSound() {
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.coin);
+        mp.start();
     }
 
     private void sendReplyMessage(int id, Object arg, long delayMS) {

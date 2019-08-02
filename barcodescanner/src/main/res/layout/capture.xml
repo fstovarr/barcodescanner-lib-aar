@@ -212,7 +212,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent"
@@ -220,8 +220,79 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/header">
+
+            <RelativeLayout
+                android:id="@+id/plastic_bag_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/unique_id_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/unique_id"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/unique_code_label"
+                    android:textColor="@color/footer_description"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/unique_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/unique_id_label"
+                    android:layout_toRightOf="@id/unique_id_label"
+                    android:text="666E555"
+                    android:textColor="@color/footer_title"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/plastic_bag_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp">
+
+                <!--<TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/bottle_label"
+                    android:textColor="@color/footer_description" /> -->
+
+                <ToggleButton
+                    android:id="@+id/plastic_bag_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/footer_description"
+                    android:textOff="@string/bag_label"
+                    android:textOn="@string/bottle_label" />
+
+                <!--
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/bag_label"
+                    android:textColor="@color/footer_description" />  -->
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/footer">
 
             <RelativeLayout
@@ -231,7 +302,7 @@
                 android:layout_above="@id/footer_bottom_layout"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -385,7 +456,7 @@
                     android:textColor="@color/footer_value" />
             </RelativeLayout>
         </RelativeLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/flip_button"
